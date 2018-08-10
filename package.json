@@ -1,0 +1,13 @@
+{
+  "name": "station-five-radio-buttons",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node node_modules/http-server/bin/http-server -p 3000 --offline -a localhost -o"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}
