@@ -6,11 +6,26 @@ class App {
   /**
    * Constructs the App class.
    * @param {[[object]]} arrItems - An array of array of items.
-   * @param {object} restrictions - An object containing keys as ids and values as arrays of ids that are incompatible with the key.
+   * @param {object} restrictions - An object containing keys as ids
+   * and values as arrays of ids that are incompatible with the key.
    */
   constructor(arrItems, restrictions) {
-    this.groups = arrItems.map((items, i, arr) => new RadioButtonGroup(items, `radio-group-${i + 1}`, i === 0));
-    this.restrictions = restrictions;
+    // Format the items to include the incompatible items.
+    const formatted = arrItems.map((items) => items.map((item) => ({
+      ...item,
+      incompatibleItems: restrictions[item.id] || [],
+    })));
+
+    this.groups = formatted.map((items, i) => {
+      const group = new RadioButtonGroup(items, `radio-group-${i + 1}`);
+
+      if (i !== 0) {
+        group.disableAll();
+      }
+
+      return group;
+    });
+    
     init.call(this);
   }
 }
@@ -28,14 +43,41 @@ function init() {
   this.element = document.createElement('form');
   this.element.appendChild(frag);
 
-  // Handle the enabled status of the radio button groups.
+  // Handle the enabled status of the radio button groups
+  // as well as the restrictions.
   this.groups.forEach((group, i, arr) => {
-    if (i < arr.length - 1) {
-      group.handleChange = () => {
-        arr[i + 1].setEnabled(true);
-      };
-    }
+    group.handleChange = (selected) => {
+      if (i < arr.length - 1) {
+        let incompatible = [];
+
+        for (let j = 0, length = arr.length - 1; j < length; j++) {
+          // Enable/disable the succeeding radio buttons depending on the selection.
+          if (arr[j].selectedItem) {
+            incompatible = incompatible.concat(arr[j].selectedItem.incompatibleItems);
+            arr[j + 1].setEnabledItems(incompatible);
+          } else {
+            arr[j + 1].disableAll();
+          }
+
+          // Disable the submit button if there's a group that has no selection.
+          if (!arr[j + 1].selectedItem) {
+            setSubmitEnabled.call(this, false);
+          }
+        }
+      } else {
+        setSubmitEnabled.call(this, true);
+      }
+    };
   });
+}
+
+/**
+ * Sets the submit button's enabled status.
+ * @param {bool} isEnabled - Boolean value indicating if the submit button should
+ * be enabled or disabled.
+ */
+function setSubmitEnabled(isEnabled) {
+  this.element.querySelector('[type=submit]').disabled = !isEnabled;
 }
 
 (() => {

@@ -1,20 +1,27 @@
 'use strict';
 
 export default class RadioButton {
-  constructor(value, name, label, isEnabled = true) {
+  constructor(value, name, label, incompatibleItems) {
     this.value = value;
     this.name = name;
     this.label = label;
-    this.isEnabled = isEnabled;
+    this.incompatibleItems = incompatibleItems;
     init.call(this);
   }
 
   /**
    * Sets the radio button's enabled status and clears the selection.
-   * @param {bool} isEnabled - The boolean value indicating whether to enable or disable the radio button.
+   * @param {bool} isEnabled - The boolean value indicating whether
+   * to enable or disable the radio button.
    */
   setEnabled(isEnabled) {
-    this.element.querySelector('input').disabled = !isEnabled;
+    const rb = this.element.querySelector('input');
+
+    rb.disabled = !isEnabled;
+
+    if (!isEnabled) {
+      rb.checked = false;
+    }
   }
 }
 
@@ -25,7 +32,7 @@ function init() {
   const range = document.createRange();
   const template = `
     <label>
-      <input type="radio" value="${this.value}" name="${this.name}" ${this.isEnabled ? '' : 'disabled'}>
+      <input type="radio" value="${this.value}" name="${this.name}">
       ${this.label}
     </label>
   `;

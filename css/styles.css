@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+html, body {
+  font: normal 14px/1.8 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+form {
+  padding: 0 10px;
+}
+
+.radio-group {
+  padding: 10px;
+}
+
+.btn {
+  background: #eee;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
