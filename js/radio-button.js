@@ -1,6 +1,13 @@
 'use strict';
 
 export default class RadioButton {
+  /**
+   * 
+   * @param {string} value - The value of the radio button.
+   * @param {string} name - The radio button (group) name.
+   * @param {string} label - The label of the radio button.
+   * @param {[number]} incompatibleItems - An array of ids (values) incompatible with the item.
+   */
   constructor(value, name, label, incompatibleItems) {
     this.value = value;
     this.name = name;
